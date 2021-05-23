@@ -1,0 +1,68 @@
+---
+# defaults:
+#   rolling: false
+#   merged_pr: 0
+#   num_pr: 0
+#   exclude: None
+
+global:
+ exclude: edgex-global-pipelines|ci-build-images|git-semver|edgex-docs|ci-management|cd-management|jenkins_pipeline_presentation|security-pipeline-policies
+badges:
+  - id: bug_hunter_5
+    enabled: true
+    display: EdgeX Bug Hunter
+    description: Squash 5 bugs and recieve this badge. You will be accailmed as one of the chosen, a true exterminator.
+    trigger:
+      merged_pr: 5
+      rolling: false
+      labels:
+        #- ireland
+        - bug
+  - id: bug_hunter_5_repeat
+    enabled: true
+    display: EdgeX Repeat Bug Hunter
+    description: So you have accended to one of the chosen? You think you have what it takes to squash those bugs?
+    include: device-.*
+    exclude: device-[camera|coap].*
+    trigger:
+      merged_pr: 5
+      rolling: true
+      max: 10 # maximum of 10 times they could get this badge, default 100
+      labels:
+        - bug
+  - id: first_time_committer
+    enabled: true
+    name: first_commit
+    display: EdgeX First Time Contributor
+    description: You did it! You first merged PR for the EdgeX community! Now go talk to Jim!
+    trigger:
+      merged_pr: 1
+      rolling: false
+  - id: first_time_contest
+    enabled: true
+    name: first_commit_contest
+    display: EdgeX Time Bound Contest
+    description: Wow! Thanks for that PR...You are in the contest now
+    begin_on: 2020-03-01
+    end_on: 2021-03-01
+    trigger:
+      merged_pr: 1
+      labels:
+        - edgex-contest
+  # - id: edgex-jakarta-gold
+  #   enabled: true
+  #   display: EdgeX Jakarta Gold Contributor
+  #   description: Welcome to the next level of contributors! You are now a Gold member. You will recieve $100 in EdgeX Coins.
+  #   trigger:
+  #     merged_pr: 50
+  #     rolling: false
+  #     labels:
+  #       - jakarta
+  # - id: edgex-god-mode
+  #   enabled: true
+  #   display: EdgeX God Level Contributor
+  #   description: Welcome to the next level of contributors! You are now a god. You can do anything you want.
+  #   trigger:
+  #     merged_pr: 100
+  #     rolling: false
+
