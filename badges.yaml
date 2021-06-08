@@ -6,29 +6,19 @@
 #   exclude: None
 
 global:
- exclude: edgex-global-pipelines|ci-build-images|git-semver|edgex-docs|ci-management|cd-management|jenkins_pipeline_presentation|security-pipeline-policies
+  exclude: edgex-global-pipelines|ci-build-images|git-semver|edgex-docs|ci-management|cd-management|jenkins_pipeline_presentation|security-pipeline-policies
 badges:
-  - id: bug_hunter_5
+  - id: bug_hunter
     enabled: true
     display: EdgeX Bug Hunter
     description: Squash 5 bugs and recieve this badge. You will be accailmed as one of the chosen, a true exterminator.
+    # include: device-.*
+    # exclude: device-[camera|coap].*
     trigger:
       merged_pr: 5
       rolling: false
       labels:
         #- ireland
-        - bug
-  - id: bug_hunter_5_repeat
-    enabled: true
-    display: EdgeX Repeat Bug Hunter
-    description: So you have accended to one of the chosen? You think you have what it takes to squash those bugs?
-    include: device-.*
-    exclude: device-[camera|coap].*
-    trigger:
-      merged_pr: 5
-      rolling: true
-      max: 10 # maximum of 10 times they could get this badge, default 100
-      labels:
         - bug
   - id: first_time_committer
     enabled: true
@@ -38,12 +28,24 @@ badges:
     trigger:
       merged_pr: 1
       rolling: false
+  - id: bug_hunter_repeat
+    enabled: true
+    display: EdgeX Repeat Bug Hunter
+    description: So you have accended to one of the chosen? You think you have what it takes to squash those bugs?
+    # include: device-.*
+    # exclude: device-[camera|coap].*
+    trigger:
+      merged_pr: 5
+      rolling: true
+      max: 10 # maximum of 10 times they could get this badge, default 100
+      labels:
+        - bug|bounty
   - id: first_time_contest
     enabled: true
     name: first_commit_contest
     display: EdgeX Time Bound Contest
     description: Wow! Thanks for that PR...You are in the contest now
-    begin_on: 2020-03-01
+    begin_on: 2021-01-01
     end_on: 2021-03-01
     trigger:
       merged_pr: 1

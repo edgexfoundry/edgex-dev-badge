@@ -6,8 +6,8 @@ import yaml
 
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
-from models.badge import Badge
-from models.pull_request import PullRequest
+from badger import Badge
+from badger import PullRequest
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +29,6 @@ def parse_args():
         help='execute processing - not setting is same as running in NOOP mode')
 
     return parser.parse_args()
-
 
 def load_config(path='./badges.yaml'):
     if os.access(path, os.R_OK):
@@ -57,7 +56,7 @@ def main():
 
     global_exclude = None
     if 'global' in badge_yaml:
-        if 'exclude' in badge_yaml['global'] and badge_yaml['global']['exclude']:
+        if 'exclude' in badge_yaml['global']:
             global_exclude = re.compile(badge_yaml['global']['exclude'])
 
     prs_by_repo = PullRequest.get_by_repo(args.org, args.max_prs, global_exclude)

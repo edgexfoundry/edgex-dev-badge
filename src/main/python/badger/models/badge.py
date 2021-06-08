@@ -248,24 +248,29 @@ class Badge(Base):
 
             return in_range
 
-    def check_trigger_labels(self, pr):
-        trigger_label_count = len(self.trigger.labels)
-        if trigger_label_count == 0:
-            return True
-        else:
-            match_count = 0
-            should_match = trigger_label_count
-            for label_regex in self.trigger.labels:
-                m = False
-                for label in pr.labels:
-                    if label_regex.match(label):
-                        m = True
-                if m:
-                    match_count += 1
-
-            # if all the rules match, we good
-            if match_count == should_match:
+    @staticmethod
+    def match_regex(self, regex, items):
+        """ return True if regex matches any item in items, False otherwise
+        """
+        for item in items:
+            if re.match(regex, item):
+                # return True when a match is found
                 return True
+        else:
+            return False
 
-        return False
+    def match_regexes(self, regexes, items):
+        """ return True only if all regexes match in items, False otherwise
+        """
+        for regex in regexes:
+            if not self.match_regex(regex, items):
+                return False
+        else:
+            # all regexes matched items
+            return True
+
+    def check_trigger_labels(self, pr):
+        if len(self.trigger.labels) == 0:
+            return True
+        return self.match_regexes(self.trigger.labels, pr.labels)
 
