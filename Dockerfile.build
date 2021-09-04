@@ -1,8 +1,13 @@
-FROM python:3-slim
+FROM python:3-slim AS build-image
+WORKDIR /build
+COPY . .
+RUN pip install pybuilder \
+    && pyb install_dependencies --no-venvs \
+    && pyb install --no-venvs --verbose
 
-WORKDIR /app
-ADD . .
-RUN pip install -r requirements.txt
-
-ENTRYPOINT [ "python" ]
-CMD [ "badger.py" ]
+# go from debian to alpine...still works!
+FROM python:3-alpine
+WORKDIR /badger
+COPY --from=build-image /build/target/dist/badger-*/dist/badger-*.tar.gz .
+RUN pip install badger-*.tar.gz
+RUN apk add --update --no-cache curl

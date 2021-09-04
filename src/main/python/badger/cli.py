@@ -19,7 +19,7 @@ def parse_args():
     parser.add_argument('--org', required=False, default='edgexfoundry',
                         help=('The organization to lookup'))
 
-    parser.add_argument('--badges', required=False, default='./badges.yaml',
+    parser.add_argument('--badges', required=False, default='./badges.yml',
                         help=('badge file to lookup rules'))
 
     parser.add_argument('--max-prs', required=False, default=30,
@@ -30,7 +30,7 @@ def parse_args():
 
     return parser.parse_args()
 
-def load_config(path='./badges.yaml'):
+def load_config(path='./badges.yml'):
     if os.access(path, os.R_OK):
         with open(path, 'r') as stream:
             return yaml.safe_load(stream)

@@ -1,6 +1,7 @@
 *.log
 pr_*.json
 winners.json
+*email-rendered.html
 
 
 # Created by https://www.toptal.com/developers/gitignore/api/python

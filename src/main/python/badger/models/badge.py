@@ -249,7 +249,7 @@ class Badge(Base):
             return in_range
 
     @staticmethod
-    def match_regex(self, regex, items):
+    def match_regex(regex, items):
         """ return True if regex matches any item in items, False otherwise
         """
         for item in items:
@@ -259,11 +259,13 @@ class Badge(Base):
         else:
             return False
 
-    def match_regexes(self, regexes, items):
+    @staticmethod
+    def match_regexes(regexes, items):
         """ return True only if all regexes match in items, False otherwise
         """
+        logger.debug(f"REGEX: {regexes}, ITEMS: {items}")
         for regex in regexes:
-            if not self.match_regex(regex, items):
+            if not Badge.match_regex(regex, items):
                 return False
         else:
             # all regexes matched items
@@ -272,5 +274,5 @@ class Badge(Base):
     def check_trigger_labels(self, pr):
         if len(self.trigger.labels) == 0:
             return True
-        return self.match_regexes(self.trigger.labels, pr.labels)
+        return Badge.match_regexes(self.trigger.labels, pr.labels)
 
