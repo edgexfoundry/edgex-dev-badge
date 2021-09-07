@@ -1,6 +1,5 @@
 import os
 import logging
-import yaml
 import re
 
 from .base import Base

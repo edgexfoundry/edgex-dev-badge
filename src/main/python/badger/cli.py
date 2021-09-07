@@ -1,3 +1,4 @@
+#import base64
 import json
 import logging
 import os
@@ -63,16 +64,29 @@ def main():
 
     winners_by_badge = {
         'count': 0,
+        'badge_details': {},
         'results': {}
     }
 
     badges = Badge.from_yaml(badge_yaml)
+    script_root = os.path.abspath(os.curdir)
+
     for badge in badges:
         if badge.enabled:
             winners = badge.process(args.org, prs_by_repo, args.execute)
             if len(winners) > 0:
                 winners_by_badge['count'] += 1
                 winners_by_badge['results'][badge.id] = winners
+
+                # with open(f"{script_root}/{badge.image}", "rb") as image_file:
+                #     encoded_image = base64.b64encode(image_file.read())
+
+                winners_by_badge['badge_details'][badge.id] = {
+                    'display': badge.display,
+                    'image_url': badge.image_url,
+                    # 'image_base64': encoded_image.decode('utf-8'),
+                    'download_url': badge.download_url
+                }
 
     print(json.dumps(winners_by_badge))
 

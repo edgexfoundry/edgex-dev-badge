@@ -2,46 +2,56 @@
 <html>
 <head>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;700&amp;display=swap" rel="stylesheet"> 
-    <link rel="stylesheet" href="https://use.typekit.net/vks2ysr.css" />
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <style type="text/css">
     body, td, div, p { font-family: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; }
-    body { background-color: #ccc;margin: 10px 0px; }
+    body { background-color: #fff;margin: 10px 0px; }
+    .icon { display: inline-block; }
+    .prs { list-style: none; padding-left:0 }
+    .prs li { margin: 10px 0; color:#85082a; font-size: 14px; }
 </style>
+<script src="https://kit.fontawesome.com/bd9df9aa2e.js" crossorigin="anonymous"></script>
 <body>
-    <table border="0" width="50%" style="margin:auto;padding:30px;background-color: #F3F3F3;border:1px solid #2d2848;">
+    <table border="0" width="100%">
         <tr>
             <td>
-                <table border="0" width="100%">
-                    <tr>
-                        <td style="text-align: center;">
-                            <h1><a href="https://www.edgexfoundry.org/" target="_blank"><img border="0" src="https://wiki.edgexfoundry.org/download/attachments/25297046/logo_edgex_foundry_4x.png?version=1&modificationDate=1549409434000&api=v2" width="357" height="40" alt="EdgeXFoundry Logo" /></a></h1>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <table border="0" cellpadding="0" cellspacing="0" style="width:100%;background-color: #fff;">
-                    <tr>
-                        <td style="text-align:center; background-color:#2d2848;height:70px;font-size:30px;color:#fff;"><i class="fa fa-bullhorn" style="padding-right: 10px;"></i> Congratulations</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 10px;">
-                            {{> email_content}}
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <table border="0" width="100%" style="border-radius: 5px;text-align: center;">
+                <table width="100%" border="0" align="left" cellspacing="0" cellpadding="0">
                     <tr>
                         <td>
-                            <div style="margin-top: 20px;">
+                            <table border="0" width="800px" style="margin:auto">
+                                <tr>
+                                    <td>
+                                        <h1><a href="https://www.edgexfoundry.org/" target="_blank"><img border="0" src="https://wiki.edgexfoundry.org/download/attachments/25297046/logo_edgex_foundry_4x.png?version=1&modificationDate=1549409434000&api=v2" width="357" height="40" alt="EdgeXFoundry Logo" /></a></h1>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="height: 100px; background-color: #425cc7; background: linear-gradient(45deg, #2d2848 40%, #425cc7 150%); color: #fff;">
+                            <h2 style="font-size:30px; font-weight: 100; width: 800px; margin: auto;"><i class="fa fa-trophy" style="padding-right: 10px;"></i>Congratulations, {{badge_name}}</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table border="0" cellpadding="0" cellspacing="0" width="800px" style="margin: 10px auto 0;background-color: #fff;">
+                                <tr>
+                                    <td style="padding: 10px;">
+                                        {{> email_content}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table border="0" width="800px" style="border-radius: 5px; margin: auto;">
+                    <tr>
+                        <td>
+                            <div style="margin-top: 20px; text-align: left;">
                                 <span style="font-size:12px;">Copyright &copy; 2021 EdgeXFoundry</span>
                             </div>
                         </td>
