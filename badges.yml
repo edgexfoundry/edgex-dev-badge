@@ -6,7 +6,7 @@
 #   exclude: None
 #edgex-global-pipelines|
 global:
-  exclude: edgex-global-pipelines|ci-build-images|git-semver|edgex-docs|ci-management|cd-management|jenkins_pipeline_presentation|security-pipeline-policies
+  exclude: edgex-global-pipelines|ci-build-images|git-semver|ci-management|cd-management|jenkins_pipeline_presentation|security-pipeline-policies
 badges:
   - id: bug_hunter
     enabled: true

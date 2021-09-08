@@ -9,6 +9,9 @@ pipeline {
     parameters {
         booleanParam defaultValue: true, description: 'Should we run the job in noop mode', name: 'DRY_RUN'
     }
+    environment {
+        ADMIN_RECIPIENTS = 'ernesto.ojeda@intel.com'
+    }
     stages {
         stage('EdgeX Developer Badges') {
             when {
@@ -31,18 +34,13 @@ pipeline {
                             reuseNode true
                         }
                     }
-                    // environment {
-                    //     GH_TOKEN = credentials('edgex-jenkins-access-username') //edgex-jenkins-github-personal-access-token
-                    // }
                     steps {
                         script {
-                            sh 'env | sort'
                             setItUp() // temporary
 
-                            sh "badger --org edgexfoundry --badges ./badges.yml ${!env.DRY_RUN ? '--execute' : '' } | tee winners.json"
+                            sh "badger --org edgexfoundry --badges ./badges.yml ${env.DRY_RUN == 'false' ? '--execute' : '' } | tee winners.json"
                             winners = readJSON(file: 'winners.json')
                             archiveArtifacts allowEmptyArchive: true, artifacts: 'badger-edgexfoundry.log'
-                            //sh 'cat $WORKSPACE/badger-edgexfoundry.log'
                         }
                     }
                 }
@@ -60,35 +58,8 @@ pipeline {
                             if(winners && winners.count > 0) {
                                 buildContentGeneratorImage()
 
-                                winners.results.each { badgeKey, winnerList ->
-                                    badgeDetails = winners.badge_details[badgeKey]
-                                    
-                                    winnerList.each { winner ->
-                                        if(winner.author == "ernestojeda") { // temporary
-                                            winner.first_name = winner.name.split(' ')[0]
-                                            winner.image_url = badgeDetails.image_url
-                                            winner.download_url = badgeDetails.download_url
-
-                                            def winnerJson    = writeJSON(json: winner, returnText: true)
-                                            def emailTemplate = generateWinnerEmail(winnerJson, winner.author, badgeDetails.display, "templates/${badgeKey}.html", 'templates/base_email_template.html')
-
-                                            def subject       = "Congratulations ${winner.name} on earning the ${badgeDetails.display} Badge!"
-                                            def recipients    = winner.email
-
-                                            if(emailTemplate && recipients) {
-                                                println "[edgeXDeveloperBadges] Sending email to ${recipients} with subject: [${subject}]"
-                                                
-                                                if(env.DRY_RUN == 'false') {
-                                                    mail body: emailTemplate, subject: subject, to: recipients, mimeType: 'text/html'
-                                                } else {
-                                                    println('[edgeXDeveloperBadges] DRY_RUN...not sending email. Check artifacts.')
-                                                }
-                                            } else {
-                                                println "[edgeXDeveloperBadges] No email message could be generated. Not sending email"
-                                            }
-                                        }
-                                    }
-                                }
+                                sendWinnerEmails(winners)
+                                sendAdminEmail(winners, env.ADMIN_RECIPIENTS)
                             } else {
                                 println("NO BADGES ENABLED OR NO WINNERS FOUND.")
                             }
@@ -101,7 +72,23 @@ pipeline {
                         expression { env.DRY_RUN == 'false' }
                     }
                     steps {
-                        sh 'git status'
+                        sshagent(credentials: ['edgex-jenkins-ssh']) {
+                            sh '''
+                            git status
+                            if ! git diff-index --quiet HEAD --; then
+                                echo "[edgeXDeveloperBadges] We have detected there are changes to commit."
+                                git config --global user.email "jenkins@edgexfoundry.org"
+                                git config --global user.name "EdgeX Jenkins"
+                                git add .
+                                git commit -s -m "chore(badge-recipients): Jenkins updated badge recipients"
+                                sudo chmod -R ug+w .git/*
+                                echo "git push origin edgex-dev-badges"
+                                #git push origin edgex-dev-badges
+                            else
+                                echo "Nothing to commit"
+                            fi
+                            '''
+                        }
                     }
                 }
             }
@@ -133,6 +120,60 @@ def generateWinnerEmail(winnerJson, author, displayName, contentTemplate, baseEm
         }
     }
     emailHTML
+}
+
+def sendWinnerEmails(winners) {
+    winners.results.each { badgeKey, winnerList ->
+        badgeDetails = winners.badge_details[badgeKey]
+        
+        winnerList.each { winner ->
+            winner.first_name = winner.name.split(' ')[0]
+            winner.image_url = badgeDetails.image_url
+            winner.download_url = badgeDetails.download_url
+
+            def winnerJson    = writeJSON(json: winner, returnText: true)
+            def emailTemplate = generateWinnerEmail(winnerJson, winner.author, badgeDetails.display, "templates/${badgeKey}.html", 'templates/base_email_template.html')
+
+            def subject       = "Congratulations ${winner.name} on earning the ${badgeDetails.display} Badge!"
+            def recipients    = winner.email
+
+            if(emailTemplate && recipients) {
+                println "[edgeXDeveloperBadges] Sending email to ${recipients} with subject: [${subject}]"
+                
+                if(env.DRY_RUN == 'false') {
+                    mail body: emailTemplate, subject: subject, to: recipients, mimeType: 'text/html'
+                } else {
+                    println('[edgeXDeveloperBadges] DRY_RUN...not sending email. Check artifacts.')
+                }
+            } else {
+                println "[edgeXDeveloperBadges] No email message could be generated. Not sending email"
+            }
+        }
+    }
+}
+
+def sendAdminEmail(winners, recipients) {
+    def winnerCount = 0
+    def adminEmailBody = "<h1>EdgeX Badge Winners Awarded</h1><p>The following users were awarded badges today. See more info here: <a href=\"${env.BUILD_URL}\">${env.BUILD_URL}</a></p>"
+    adminEmailBody += "<ul>"
+    winners.results.each { badgeKey, winnerList ->
+        badgeDetails = winners.badge_details[badgeKey]
+
+        winnerList.each { winner ->
+            adminEmailBody += "<li><a href=\"http://github.com/${winner.author}\" target=\"_blank\">${winner.name}</a> [<a href=\"mailto:${winner.email}\">${winner.email}</a>]</li>"
+            winnerCount++
+        }
+    }
+    adminEmailBody += "</ul>"
+    adminEmailBody += "<p>For further info please email the DevOps WG email or visit the <a href=\"https://edgexfoundry.slack.com/archives/CE46S51DX\" target=\"_blank\">#devops</a> slack channel</p>"
+
+    if(env.DRY_RUN == 'false') {
+        mail body: adminEmailBody, subject: "[${winnerCount}] EdgeX Badge Winners Awarded", to: recipients, mimeType: 'text/html'
+    } else {
+        println('[edgeXDeveloperBadges] DRY_RUN...not admin sending email. Check artifacts.')
+        writeFile(file: 'admin_email.html', text: adminEmailBody)
+        archiveArtifacts allowEmptyArchive: true, artifacts: 'admin_email.html'
+    }
 }
 
 def setItUp() {
