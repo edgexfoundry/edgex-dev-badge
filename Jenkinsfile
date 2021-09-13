@@ -7,6 +7,8 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '30'))
     }
     parameters {
+        string defaultValue: '30', description: 'How far back to search for PRs for a specific repo', name: 'LOOKBACK_WINDOW', trim: true
+        booleanParam defaultValue: false, description: 'Do not use lookback window and search ALL PRs', name: 'NO_LOOKBACK'
         booleanParam defaultValue: true, description: 'Should we run the job in noop mode', name: 'DRY_RUN'
     }
     environment {
@@ -34,11 +36,38 @@ pipeline {
                             reuseNode true
                         }
                     }
+                    // environment {
+                    //     GH_TOKEN = credentials('edgex-jenkins-access-username') //edgex-jenkins-github-personal-access-token
+                    // }
                     steps {
                         script {
                             setItUp() // temporary
 
-                            sh "badger --org edgexfoundry --badges ./badges.yml ${env.DRY_RUN == 'false' ? '--execute' : '' } | tee winners.json"
+                            def bargerArgs = [
+                                '--org edgexfoundry',
+                                '--badges ./badges.yml'
+                            ]
+
+                            if(env.NO_LOOKBACK == 'true') {
+                                bargerArgs << '--no-lookback'
+                            } else {
+                                // default is 30 days, but maybe someone might want to override?
+                                if(env.LOOKBACK_WINDOW) {
+                                    // normalize in case bad input
+                                    def lookback = env.LOOKBACK_WINDOW == '' || env.LOOKBACK_WINDOW == '0' ? '30' : env.LOOKBACK_WINDOW
+
+                                    bargerArgs << "--lookback ${lookback}"
+                                }
+                            }
+
+                            if(env.DRY_RUN == 'false') {
+                                bargerArgs << '--execute'
+                            }
+
+                            def badgerCommand = "badger ${bargerArgs.join(' ')}"
+                            println "[edgeXDeveloperBadges] Running badger command: ${badgerCommand}"
+
+                            sh badgerCommand
                             winners = readJSON(file: 'winners.json')
                             archiveArtifacts allowEmptyArchive: true, artifacts: 'badger-edgexfoundry.log'
                         }
@@ -61,7 +90,7 @@ pipeline {
                                 sendWinnerEmails(winners)
                                 sendAdminEmail(winners, env.ADMIN_RECIPIENTS)
                             } else {
-                                println("NO BADGES ENABLED OR NO WINNERS FOUND.")
+                                println("[edgeXDeveloperBadges] NO BADGES ENABLED OR NO WINNERS FOUND.")
                             }
                         }
                     }
@@ -72,23 +101,24 @@ pipeline {
                         expression { env.DRY_RUN == 'false' }
                     }
                     steps {
-                        sshagent(credentials: ['edgex-jenkins-ssh']) {
-                            sh '''
-                            git status
-                            if ! git diff-index --quiet HEAD --; then
-                                echo "[edgeXDeveloperBadges] We have detected there are changes to commit."
-                                git config --global user.email "jenkins@edgexfoundry.org"
-                                git config --global user.name "EdgeX Jenkins"
-                                git add .
-                                git commit -s -m "chore(badge-recipients): Jenkins updated badge recipients"
-                                sudo chmod -R ug+w .git/*
-                                echo "git push origin edgex-dev-badges"
-                                #git push origin edgex-dev-badges
-                            else
-                                echo "Nothing to commit"
-                            fi
-                            '''
-                        }
+                        sh '''
+                        git status
+                        if ! git diff-index --quiet HEAD --; then
+                            echo "[edgeXDeveloperBadges] We have detected there are changes to commit."
+                            git config --global user.email "jenkins@edgexfoundry.org"
+                            git config --global user.name "EdgeX Jenkins"
+                            git add .
+                            git commit -s -m "chore(badge-recipients): Jenkins updated badge recipients"
+                            sudo chmod -R ug+w .git/*
+                        else
+                            echo "Nothing to commit"
+                        fi
+                        '''
+                        // sshagent(credentials: ['edgex-jenkins-ssh']) {
+                            // retry(3) {
+                            //     sh 'git push origin edgex-dev-badges'
+                            // }
+                        // }
                     }
                 }
             }

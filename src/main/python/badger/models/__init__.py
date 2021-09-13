@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .api import API
 from .base import Base
 from .badge import Badge
 from .pull_request import PullRequest

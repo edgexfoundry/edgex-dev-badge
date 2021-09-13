@@ -23,8 +23,14 @@ def parse_args():
     parser.add_argument('--badges', required=False, default='./badges.yml',
                         help=('badge file to lookup rules'))
 
-    parser.add_argument('--max-prs', required=False, default=30,
-                        help=('maximum number of PRs to check per repo. Over 30 and you may start seeing timeouts'))
+    parser.add_argument('--winners', required=False, default='./winners.json',
+                        help=('File to write winners json to'))
+
+    parser.add_argument('--lookback', required=False, type=int, default=30,
+                        help=('Lookback window for PRs'))
+
+    parser.add_argument('--no-lookback', action='store_true',
+                        help='Do not use lookback window and search all PRs')
 
     parser.add_argument('--execute', action='store_true',
         help='execute processing - not setting is same as running in NOOP mode')
@@ -42,7 +48,7 @@ def set_logging(args):
     rootLogger = logging.getLogger()
     rootLogger.setLevel(logging.DEBUG)
 
-    logfile = f"{os.getenv('PWD')}/badger-{args.org}.log"
+    logfile = f"./badger-{args.org}.log"
     file_handler = logging.FileHandler(logfile)
     file_formatter = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
     file_handler.setFormatter(file_formatter)
@@ -60,7 +66,13 @@ def main():
         if 'exclude' in badge_yaml['global']:
             global_exclude = re.compile(badge_yaml['global']['exclude'])
 
-    prs_by_repo = PullRequest.get_by_repo(args.org, args.max_prs, global_exclude)
+    #lookback = int(args.lookback)
+    if args.no_lookback:
+        lookback = None
+    else:
+        lookback = args.lookback
+
+    prs_by_repo = PullRequest.get_by_repo(args.org, lookback, global_exclude)
 
     winners_by_badge = {
         'count': 0,
@@ -69,12 +81,13 @@ def main():
     }
 
     badges = Badge.from_yaml(badge_yaml)
-    script_root = os.path.abspath(os.curdir)
 
+    total_winners = 0
     for badge in badges:
         if badge.enabled:
             winners = badge.process(args.org, prs_by_repo, args.execute)
             if len(winners) > 0:
+                total_winners += len(winners)
                 winners_by_badge['count'] += 1
                 winners_by_badge['results'][badge.id] = winners
 
@@ -88,7 +101,11 @@ def main():
                     'download_url': badge.download_url
                 }
 
-    print(json.dumps(winners_by_badge))
+    with open(args.winners, 'w') as file:
+        json.dump(winners_by_badge, file)
+    
+    print("===============================================")
+    print(f"Badger complete...Found [{total_winners}] winners. Check the {args.winners} file")
 
 
 if __name__ == "__main__":
