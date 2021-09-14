@@ -1,3 +1,5 @@
 github3api
 pyyaml
 progress1bar
+pyfiglet
+ansicolors

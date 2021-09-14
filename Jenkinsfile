@@ -131,13 +131,13 @@ def buildContentGeneratorImage() {
     sh 'echo "FROM node:alpine\nRUN npm install -g mustache" | docker build -t mustache -'
 }
 
-def generateWinnerEmail(winnerJson, author, displayName, contentTemplate, baseEmailTemplate) {
+def generateWinnerEmail(finalWinnersFile, author, displayName, contentTemplate, baseEmailTemplate) {
     def emailHTML
     docker.image('mustache').inside('-u 0:0 --privileged -v /tmp:/tmp') {
         sh "rm -f ./email-rendered-${author}.html" // paranoia
 
         // render the partial
-        sh "rm -f /tmp/email_content.mustache && echo '${winnerJson}' | mustache - ${contentTemplate} /tmp/email_content.mustache"
+        sh "rm -f /tmp/email_content.mustache && cat '${finalWinnersFile}' | mustache - ${contentTemplate} /tmp/email_content.mustache"
 
         // render the final email
         sh "echo '{\"badge_name\": \"${displayName}\"}' | mustache - ${baseEmailTemplate} -p /tmp/email_content.mustache ./email-rendered-${author}.html"
@@ -161,8 +161,9 @@ def sendWinnerEmails(winners) {
             winner.image_url = badgeDetails.image_url
             winner.download_url = badgeDetails.download_url
 
-            def winnerJson    = writeJSON(json: winner, returnText: true)
-            def emailTemplate = generateWinnerEmail(winnerJson, winner.author, badgeDetails.display, "templates/${badgeKey}.html", 'templates/base_email_template.html')
+            def finalWinners = './winners-final.json'
+            writeJSON(json: winner, file: finalWinners)
+            def emailTemplate = generateWinnerEmail(finalWinners, winner.author, badgeDetails.display, "templates/${badgeKey}.html", 'templates/base_email_template.html')
 
             def subject       = "Congratulations ${winner.name} on earning the ${badgeDetails.display} Badge!"
             def recipients    = winner.email

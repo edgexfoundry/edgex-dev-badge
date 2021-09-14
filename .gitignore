@@ -1,6 +1,6 @@
 *.log
 pr_*.json
-winners.json
+winners*.json
 *email-rendered*.html
 
 

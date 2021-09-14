@@ -2,6 +2,7 @@
 import json
 import logging
 import os
+#import pyfiglet
 import re
 import yaml
 
@@ -9,6 +10,8 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 from badger import Badge
 from badger import PullRequest
+
+from colors import *
 
 logger = logging.getLogger(__name__)
 
@@ -55,7 +58,26 @@ def set_logging(args):
     file_handler.setLevel(logging.DEBUG)
     rootLogger.addHandler(file_handler)
 
+def give_me_a_badger():
+    return """
+                    ___,,___
+           _,-='=- =-  -`"--.__,,.._
+        ,-;// /  - -       -   -= - "=.
+      ,'///    -     -   -   =  - ==-=\`.
+     |/// /  =    `. - =   == - =.=_,,._ `=/|
+    ///    -   -    \  - - = ,ndDMHHMM/\b  \\
+  ,' - / /        / /\ =  - /MM(,,._`YQMML  `|
+ <_,=^Kkm / / / / ///H|wnWWdMKKK#""-;. `"0\  |
+        `""QkmernesTOMM|""WHMKKMM\   `--. \> \\
+ hjm          `""'  `->>>    ``WHMb,.    `-_<@)
+                                `"QMM`.
+                                   `>>>
+                  I badge so you don't have to.
+    """
+
 def main():
+    print(color(give_me_a_badger(), fg='orange'))
+    #print(pyfiglet.figlet_format('Badger', font='slant'))
     args = parse_args()
     set_logging(args)
 
