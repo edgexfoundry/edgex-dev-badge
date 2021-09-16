@@ -1,0 +1,73 @@
+---
+# defaults:
+#   rolling: false
+#   merged_pr: 0
+#   num_pr: 0
+#   exclude: None
+#edgex-global-pipelines|
+global:
+  exclude: edgex-global-pipelines|ci-build-images|git-semver|ci-management|cd-management|jenkins_pipeline_presentation|security-pipeline-policies
+badges:
+  - id: bug_hunter
+    enabled: true
+    name: bug_huner_2x
+    display: Bug Hunter
+    image_url: https://raw.githubusercontent.com/ernestojeda/cd-management/edgex-dev-badges/badges/edgexfoundry/images/bug_hunter/EdgeEx_BugHunter_v2-01.png
+    download_url: https://raw.githubusercontent.com/ernestojeda/cd-management/edgex-dev-badges/badges/edgexfoundry/images/bug_hunter/EdgeEx_BugHunter_v2-01.png
+    description: Squash 2 bugs and recieve this badge. You will be accailmed as one of the chosen, a true exterminator.
+    trigger:
+      merged_pr: 2
+      rolling: false
+      labels:
+        - bug
+  - id: first_time_committer
+    enabled: true
+    name: first_commit
+    display: EdgeX First Time Contributor
+    image_url: https://raw.githubusercontent.com/ernestojeda/cd-management/edgex-dev-badges/badges/edgexfoundry/images/bug_hunter/EdgeEx_BugHunter_v2-01.png
+    download_url: https://raw.githubusercontent.com/ernestojeda/cd-management/edgex-dev-badges/badges/edgexfoundry/images/bug_hunter/EdgeEx_BugHunter_v2-01.png
+    image: https://raw.githubusercontent.com/ernestojeda/cd-management/edgex-dev-badges/badges/edgexfoundry/...
+    description: You did it! You first merged PR for the EdgeX community! Now go talk to Jim!
+    trigger:
+      merged_pr: 1
+      rolling: false
+  - id: bug_hunter_repeat
+    enabled: true
+    display: EdgeX Repeat Bug Hunter
+    description: So you have accended to one of the chosen? You think you have what it takes to squash those bugs?
+    trigger:
+      merged_pr: 5
+      rolling: true
+      max: 10 # maximum of 10 times they could get this badge, default 100
+      labels:
+        - bug|bounty
+  - id: device_first_time_contest
+    enabled: true
+    name: device_first_commit_contest
+    display: EdgeX Device Services Time Bound Contest
+    description: Wow! Thanks for that PR...You are in the contest now
+    begin_on: 2021-01-01
+    end_on: 2021-03-01
+    include: device-.*
+    exclude: device-[camera|coap].*
+    trigger:
+      merged_pr: 1
+      labels:
+        - edgex-contest
+  - id: edgex-jakarta-gold
+    enabled: true
+    display: EdgeX Jakarta Gold Contributor
+    description: Welcome to the next level of contributors! You are now a Gold member. You will recieve $100 in EdgeX Coins.
+    trigger:
+      merged_pr: 50
+      rolling: false
+      labels:
+        - jakarta
+  - id: edgex-god-mode
+    enabled: true
+    display: EdgeX God Level Contributor
+    description: Welcome to the next level of contributors! You are now a god. You can do anything you want.
+    trigger:
+      merged_pr: 100
+      rolling: false
+

@@ -1,0 +1,17 @@
+<div style="width:90px; float:right"><img width="90" height="90" src="{{image_url}}" /></div>
+<p style="color:#85082a">Dear {{first_name}},</p>
+<p>We want to congratulate you on earning EdgeX's badge of distinction for improving the platform's quality, the Bug Hunter for fixing two or more bugs from our Github repos!</p>
+<p>
+    <a href="{{download_url}}" download="edgex-bug-hunter"><img class="icon" width="16" height="16" src="https://raw.githubusercontent.com/ernestojeda/cd-management/edgex-dev-badges/templates/images/save-icon.png" /> Click here</a> to download your badge</a>. A little pleading from us at EdgeX Foundry, show off your well-earned badge of success on your <img class="icon" width="16" height="16" src="https://raw.githubusercontent.com/ernestojeda/cd-management/edgex-dev-badges/templates/images/github.png" /> <a href="https://github.com/{{author}}" target="_blank">GitHub profile</a>, <img class="icon" width="16" height="16" src="https://raw.githubusercontent.com/ernestojeda/cd-management/edgex-dev-badges/templates/images/linkedin.png" /> <a href="https://linkedin.com" target="_blank">LinkedIn</a>, <img class="icon" width="16" height="16" src="https://raw.githubusercontent.com/ernestojeda/cd-management/edgex-dev-badges/templates/images/twitter.png" /> <a href="https://twitter.com" target="_blank">Twitter</a>, or any place you use to highlight your professional accomplishments.  Need some instructions on how to do this?
+    Follow this link to our webpage and we will show you how to display your badge on these platforms.  Follow this link to see the other badges we have created for the community and their requirements.
+</p>
+<p>At EdgeX Foundry, community means everything.  We would not be where we are today if it wasn't for our incredible community and its members like you.  Once again, thank you so much for all the hard work you have done for the Community.</p>
+<div style="background-color: #f1f0f2; padding: 10px 20px;">
+<p>Your attrbuted PRs:</p>
+<ul class="prs" style="list-style: none; padding-left:0">
+    {{#counted_prs}}
+    <li style="margin: 10px 0; color:#85082a; font-size: 14px;"><img class="icon" width="16" height="16" src="https://raw.githubusercontent.com/ernestojeda/cd-management/edgex-dev-badges/templates/images/code-branch-icon.png" /> {{.}}</li>
+    {{/counted_prs}}
+</ul>
+</div>
+<p><br />Sincerly,<br />The EdgeX TSC</p>

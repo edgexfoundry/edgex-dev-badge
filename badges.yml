@@ -1,0 +1,30 @@
+---
+# defaults:
+#   rolling: false
+#   merged_pr: 0
+#   num_pr: 0
+#   exclude: None
+global:
+  exclude: edgex-global-pipelines|ci-build-images|git-semver|ci-management|cd-management|jenkins_pipeline_presentation|security-pipeline-policies
+badges:
+  - id: bug_hunter
+    enabled: true
+    display: Bug Hunter
+    image_url: https://raw.githubusercontent.com/edgexfoundry/edgex-dev-badge/main/badges/edgexfoundry/images/bug_hunter/EdgeEx_BugHunter_v2-01.png
+    download_url: https://raw.githubusercontent.com/edgexfoundry/edgex-dev-badge/main/badges/edgexfoundry/images/bug_hunter/EdgeEx_BugHunter_v2-01.png
+    description: Squash 2 bugs and recieve this badge. You will be accailmed as one of the chosen, a true exterminator.
+    trigger:
+      merged_pr: 2
+      rolling: false
+      labels:
+        - bug
+  # - id: first_time_committer
+  #   enabled: true
+  #   name: first_commit
+  #   display: EdgeX First Time Contributor
+  #   image_url: https://raw.githubusercontent.com/edgexfoundry/edgex-dev-badge/main/badges/edgexfoundry/images/first_time_committer/...
+  #   download_url: https://raw.githubusercontent.com/edgexfoundry/edgex-dev-badge/main/badges/edgexfoundry/images/first_time_committer/...
+  #   description: You did it! You first merged PR for the EdgeX community! Now go talk to Jim!
+  #   trigger:
+  #     merged_pr: 1
+  #     rolling: false
