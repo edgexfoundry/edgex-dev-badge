@@ -29,6 +29,7 @@ pipeline {
     }
     environment {
         ADMIN_RECIPIENTS = 'ernesto.ojeda@intel.com'
+        BUILD_FAILURE_NOTIFY_LIST = 'edgex-tsc-devops@lists.edgexfoundry.org'
     }
     stages {
         stage('EdgeX Developer Badges') {
@@ -137,6 +138,20 @@ pipeline {
                     }
                 }
             }
+        }
+    }
+    post {
+        failure {
+            script {
+                currentBuild.result = 'FAILED'
+                // only send email when on a release stream branch i.e. main, hanoi, ireland, etc.
+                if(edgex.isReleaseStream()) {
+                    edgeXEmail(emailTo: env.BUILD_FAILURE_NOTIFY_LIST)
+                }
+            }
+        }
+        always {
+            edgeXInfraPublish()
         }
     }
 }
