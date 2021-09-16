@@ -30,8 +30,8 @@ use_plugin('python.install_dependencies')
 name = 'badger'
 authors = [Author('Ernesto Ojeda', 'ernesto.ojeda@intel.com')]
 summary = 'A Python script finds GitHub contributors and gives them badges'
-url = 'https://github.com/edgexfoundry/cd-management/tree/badger'
-version = '0.0.1'
+url = 'https://github.com/edgexfoundry/edgex-dev-badge/tree/main'
+version = '1.0.0'
 default_task = [
     'clean',
     'analyze',
