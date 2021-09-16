@@ -29,7 +29,7 @@ pipeline {
     }
     environment {
         ADMIN_RECIPIENTS = 'ernesto.ojeda@intel.com'
-        BUILD_FAILURE_NOTIFY_LIST = 'edgex-tsc-devops@lists.edgexfoundry.org'
+        BUILD_FAILURE_NOTIFY_LIST = 'ernesto.ojeda@intel.com'
     }
     stages {
         stage('EdgeX Developer Badges') {
@@ -55,7 +55,7 @@ pipeline {
                         }
                     }
                     environment {
-                        GH_TOKEN = credentials('edgex-dev-badges-token')
+                        GH_TOKEN_PSW = credentials('edgex-dev-badges-token')
                     }
                     steps {
                         script {
