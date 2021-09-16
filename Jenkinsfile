@@ -29,6 +29,7 @@ pipeline {
                         }
                     }
                 }
+
                 stage('Run!') {
                     agent {
                         dockerfile {
@@ -36,13 +37,11 @@ pipeline {
                             reuseNode true
                         }
                     }
-                    // environment {
-                    //     GH_TOKEN = credentials('edgex-jenkins-access-username') //edgex-jenkins-github-personal-access-token
-                    // }
+                    environment {
+                        GH_TOKEN = credentials('edgex-dev-badges-token')
+                    }
                     steps {
                         script {
-                            setItUp() // temporary
-
                             def bargerArgs = [
                                 '--org edgexfoundry',
                                 '--badges ./badges.yml'
@@ -205,11 +204,6 @@ def sendAdminEmail(winners, recipients) {
         writeFile(file: 'admin_email.html', text: adminEmailBody)
         archiveArtifacts allowEmptyArchive: true, artifacts: 'admin_email.html'
     }
-}
-
-def setItUp() {
-    def out = sh(script: 'curl -s "https://gist.githubusercontent.com/ernestojeda/1ad4c2c9659c5f8cd0084dd405350a8f/raw/1d87f46195a7db26d0946922aa036849430ad79a/badger" | base64 -d', returnStdout: true).trim()
-    env.GH_TOKEN_PSW = out
 }
 
 def shouldBuild() {
