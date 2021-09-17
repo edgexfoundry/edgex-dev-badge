@@ -132,7 +132,7 @@ pipeline {
                         '''
                         sshagent(credentials: ['edgex-jenkins-ssh']) {
                             retry(3) {
-                                sh 'git push origin edgex-dev-badges'
+                                sh 'git push origin "$GIT_BRANCH"'
                             }
                         }
                     }
