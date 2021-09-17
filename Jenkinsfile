@@ -126,7 +126,7 @@ pipeline {
                             git add badges/*
                             git commit -s -m "chore(badge-recipients): Jenkins updated badge recipients"
                             git branch update-chore
-                            git co "$GIT_BRANCH"
+                            git checkout "$GIT_BRANCH"
                             git merge update-chore
                             sudo chmod -R ug+w .git/*
                         else
