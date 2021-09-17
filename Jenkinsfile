@@ -29,7 +29,7 @@ pipeline {
     }
     environment {
         ADMIN_RECIPIENTS = 'ernesto.ojeda@intel.com'
-        BUILD_FAILURE_NOTIFY_LIST = 'ernesto.ojeda@intel.com'
+        BUILD_FAILURE_NOTIFY_LIST = 'edgex-tsc-devops@lists.edgexfoundry.org'
     }
     stages {
         stage('EdgeX Developer Badges') {
