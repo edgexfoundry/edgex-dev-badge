@@ -18,13 +18,12 @@ badges:
       rolling: false
       labels:
         - bug
-  # - id: first_time_committer
-  #   enabled: true
-  #   name: first_commit
-  #   display: EdgeX First Time Contributor
-  #   image_url: https://raw.githubusercontent.com/edgexfoundry/edgex-dev-badge/main/badges/edgexfoundry/images/first_time_committer/...
-  #   download_url: https://raw.githubusercontent.com/edgexfoundry/edgex-dev-badge/main/badges/edgexfoundry/images/first_time_committer/...
-  #   description: You did it! You first merged PR for the EdgeX community! Now go talk to Jim!
-  #   trigger:
-  #     merged_pr: 1
-  #     rolling: false
+  - id: first_time_committer
+    enabled: false
+    display: First Time Contributor
+    image_url: https://raw.githubusercontent.com/edgexfoundry/edgex-dev-badge/main/badges/edgexfoundry/images/first_time_committer/EdgeEx_firsttimecontributor.png
+    download_url: https://raw.githubusercontent.com/edgexfoundry/edgex-dev-badge/main/badges/edgexfoundry/images/first_time_committer/EdgeEx_firsttimecontributor.png
+    description: You did it! You first merged PR for the EdgeX community! Now go talk to Jim!
+    trigger:
+      merged_pr: 1
+      rolling: false
