@@ -3,3 +3,4 @@ pyyaml
 progress1bar
 pyfiglet
 ansicolors
+pandas

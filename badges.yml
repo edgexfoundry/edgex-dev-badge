@@ -11,7 +11,7 @@ badges:
     enabled: true
     display: Bug Hunter
     image_url: https://raw.githubusercontent.com/edgexfoundry/edgex-dev-badge/main/badges/edgexfoundry/images/bug_hunter/EdgeEx_BugHunter_v2-01.png
-    download_url: https://raw.githubusercontent.com/edgexfoundry/edgex-dev-badge/main/badges/edgexfoundry/images/bug_hunter/EdgeEx_BugHunter_v2-01.png
+    credly_id: 740e9daa-ef58-43ce-97b0-54bd99bbe164
     description: Squash 2 bugs and recieve this badge. You will be accailmed as one of the chosen, a true exterminator.
     trigger:
       merged_pr: 2
@@ -19,10 +19,10 @@ badges:
       labels:
         - bug
   - id: first_time_committer
-    enabled: false
-    display: First Time Contributor
+    enabled: true
+    display: First Time Committer
     image_url: https://raw.githubusercontent.com/edgexfoundry/edgex-dev-badge/main/badges/edgexfoundry/images/first_time_committer/EdgeEx_firsttimecontributor.png
-    download_url: https://raw.githubusercontent.com/edgexfoundry/edgex-dev-badge/main/badges/edgexfoundry/images/first_time_committer/EdgeEx_firsttimecontributor.png
+    credly_id: a269a9ae-156e-4b03-bf8a-e78b30039599
     description: You did it! You first merged PR for the EdgeX community! Now go talk to Jim!
     trigger:
       merged_pr: 1

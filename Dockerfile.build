@@ -21,8 +21,8 @@ RUN pip install pybuilder \
     && pyb install_dependencies --no-venvs \
     && pyb install --no-venvs --verbose
 
-FROM python:3-alpine
+FROM python:3-slim
 WORKDIR /badger
 COPY --from=build-image /build/target/dist/badger-*/dist/badger-*.tar.gz .
 RUN pip install badger-*.tar.gz \
-    && apk add --update --no-cache curl
+    && apt-get update && apt-get install -y curl && apt-get clean

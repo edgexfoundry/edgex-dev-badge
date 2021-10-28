@@ -12,16 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#import base64
 import json
 import logging
 import os
-#import pyfiglet
+import pandas as pd
 import re
 import yaml
 
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-
+from datetime import date
 from badger import Badge
 from badger import PullRequest
 
@@ -40,7 +39,10 @@ def parse_args():
     parser.add_argument('--badges', required=False, default='./badges.yml',
                         help=('badge file to lookup rules'))
 
-    parser.add_argument('--winners', required=False, default='./winners.json',
+    parser.add_argument('--winners-json', required=False, default='./winners.json',
+                        help=('File to write winners json to'))
+
+    parser.add_argument('--winners-csv', required=False, default='./winners.csv',
                         help=('File to write winners json to'))
 
     parser.add_argument('--lookback', required=False, type=int, default=30,
@@ -89,12 +91,48 @@ def give_me_a_badger():
                   I badge so you don't have to.
     """
 
+def generate_credly_csv(winner_file, winners_by_badge):
+    if winners_by_badge['count'] > 0:
+        print(f"Writing CSV file to: {winner_file}")
+        all_winners = []
+        issue_date = date.today().strftime('%m/%d/%Y')
+        for badge_id in winners_by_badge['results']:
+            badge_data = winners_by_badge['badge_details'][badge_id]
+            credly_id = badge_data['credly_id']
+            for winner in winners_by_badge['results'][badge_id]:
+                if winner['name'] != 'None':
+                    full_name_split = winner['name'].split(' ')
+                    first_name = full_name_split[0]
+                    last_name = " ".join(full_name_split[1:])
+                else:
+                    first_name = winner['author']
+                    last_name = ''
+                
+                winner_data = [credly_id, winner['email'],
+                            first_name, last_name, issue_date]
+                
+                # add empty for rest of columns
+                for i in range(11): winner_data.append('')
+
+                all_winners.append(winner_data)
+
+        raw_columns = "Badge Template ID,Recipient Email,Issued to First Name,Issued to Last Name,Issued at,Expires at,Issuer Earner ID,Country,State or Province,Evidence Name,Evidence URL,URL Evidence Description,Text Evidence Title,Text Evidence Description,Id Evidence Title,Id Evidence Description"
+        columns = raw_columns.split(',')
+
+        credly_data = pd.DataFrame(all_winners, columns=columns)
+        credly_data.to_csv(winner_file, index=False)
+    else:
+        print("No winner csv data to write to csv")
+
+def generate_json(winner_file, winners_by_badge):
+    with open(winner_file, 'w') as file:
+        json.dump(winners_by_badge, file)
+
 def main():
     print(color(give_me_a_badger(), fg='orange'))
-    #print(pyfiglet.figlet_format('Badger', font='slant'))
     args = parse_args()
     set_logging(args)
-
+    
     badge_yaml = load_config(args.badges)
 
     global_exclude = None
@@ -133,15 +171,14 @@ def main():
                 winners_by_badge['badge_details'][badge.id] = {
                     'display': badge.display,
                     'image_url': badge.image_url,
-                    # 'image_base64': encoded_image.decode('utf-8'),
-                    'download_url': badge.download_url
+                    'credly_id': badge.credly_id
                 }
 
-    with open(args.winners, 'w') as file:
-        json.dump(winners_by_badge, file)
-    
+    generate_credly_csv(args.winners_csv, winners_by_badge)
+    generate_json(args.winners_json, winners_by_badge)
+
     print("===============================================")
-    print(f"Badger complete...Found [{total_winners}] winners. Check the {args.winners} file")
+    print(f"Badger complete...Found [{total_winners}] winners. Check the {args.winners_json} file")
 
 
 if __name__ == "__main__":

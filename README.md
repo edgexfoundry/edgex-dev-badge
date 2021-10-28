@@ -66,18 +66,21 @@ Jenkins automation combines the badger cli and email Jenkins' email capabilities
                                    `>>>
                   I badge so you don't have to.
     
-usage: badger [-h] [--org ORG] [--badges BADGES] [--winners WINNERS] [--lookback LOOKBACK] [--no-lookback] [--execute]
+usage: badger [-h] [--org ORG] [--badges BADGES] [--winners-json WINNERS_JSON] [--winners-csv WINNERS_CSV] [--lookback LOOKBACK] [--no-lookback] [--execute]
 
 Rules based GitHub badge scanner
 
 optional arguments:
-  -h, --help           show this help message and exit
-  --org ORG            The organization to lookup (default: edgexfoundry)
-  --badges BADGES      badge file to lookup rules (default: ./badges.yml)
-  --winners WINNERS    File to write winners json to (default: ./winners.json)
-  --lookback LOOKBACK  Lookback window for PRs (default: 30)
-  --no-lookback        Do not use lookback window and search all PRs (default: False)
-  --execute            execute processing - not setting is same as running in NOOP mode (default: False)
+  -h, --help            show this help message and exit
+  --org ORG             The organization to lookup (default: edgexfoundry)
+  --badges BADGES       badge file to lookup rules (default: ./badges.yml)
+  --winners-json WINNERS_JSON
+                        File to write winners json to (default: ./winners.json)
+  --winners-csv WINNERS_CSV
+                        File to write winners json to (default: ./winners.csv)
+  --lookback LOOKBACK   Lookback window for PRs (default: 30)
+  --no-lookback         Do not use lookback window and search all PRs (default: False)
+  --execute             execute processing - not setting is same as running in NOOP mode (default: False)
 ```
 
 ## Reference
@@ -126,7 +129,7 @@ $ badger --org edgexfoundry --lookback 365 && cat ./winners.json
 More complex example to query the `edgexfoundry` org for ALL PR's ever closed and use a different badge yaml file and write the winners to a different directory.
 
 ```bash
-$ badger --org edgexfoundry --no-lookback --badges super-badges.yml --winners super-winners.json && cat ./super-winners.json
+$ badger --org edgexfoundry --no-lookback --badges super-badges.yml --winners-json super-winners.json && cat ./super-winners.json
 ...
 {"count": 1, "badge_details": {"bug_hunter": {"display": "Bug Hunter",...
 ```

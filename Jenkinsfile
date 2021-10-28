@@ -86,6 +86,7 @@ pipeline {
                             sh badgerCommand
                             winners = readJSON(file: 'winners.json')
                             archiveArtifacts allowEmptyArchive: true, artifacts: 'badger-edgexfoundry.log'
+                            archiveArtifacts allowEmptyArchive: true, artifacts: '*.csv'
                         }
                     }
                 }
@@ -191,9 +192,8 @@ def sendWinnerEmails(winners) {
         badgeDetails = winners.badge_details[badgeKey]
         
         winnerList.each { winner ->
-            winner.first_name = winner.name.split(' ')[0]
+            winner.first_name = winner.name != 'None' ? winner.name.split(' ')[0] : winner.author
             winner.image_url = badgeDetails.image_url
-            winner.download_url = badgeDetails.download_url
 
             def finalWinners = './winners-final.json'
             writeJSON(json: winner, file: finalWinners)
@@ -230,7 +230,8 @@ def sendAdminEmail(winners, recipients) {
         }
     }
     adminEmailBody += "</ul>"
-    adminEmailBody += "<p>For further info please email the DevOps WG email or visit the <a href=\"https://edgexfoundry.slack.com/archives/CE46S51DX\" target=\"_blank\">#devops</a> slack channel</p>"
+    adminEmailBody += "<p>To download the Winner CSV <a href=\"${env.JENKINS_URL}/job/edgexfoundry/job/edgex-dev-badge/job/main/lastSuccessfulBuild/artifact/winners.csv\">Click here</a></p>"
+    adminEmailBody += "<p>For further info/help please email the DevOps WG email or visit the <a href=\"https://edgexfoundry.slack.com/archives/CE46S51DX\" target=\"_blank\">#devops</a> slack channel</p>"
 
     if(env.DRY_RUN == 'false') {
         mail body: adminEmailBody, subject: "[${winnerCount}] EdgeX Badge Winners Awarded", to: recipients, mimeType: 'text/html'
