@@ -19,7 +19,7 @@ badges:
       labels:
         - bug
   - id: first_time_committer
-    enabled: true
+    enabled: false
     display: First Time Contributor
     image_url: https://raw.githubusercontent.com/edgexfoundry/edgex-dev-badge/main/badges/edgexfoundry/images/first_time_committer/EdgeEx_firsttimecontributor.png
     credly_id: a269a9ae-156e-4b03-bf8a-e78b30039599
