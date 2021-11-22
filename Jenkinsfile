@@ -28,7 +28,7 @@ pipeline {
         booleanParam defaultValue: true, description: 'Should we run the job in noop mode', name: 'DRY_RUN'
     }
     environment {
-        ADMIN_RECIPIENTS = 'ernesto.ojeda@intel.com'
+        ADMIN_RECIPIENTS = 'ernesto.ojeda@intel.com,jim@iotechsys.com'
         BUILD_FAILURE_NOTIFY_LIST = 'edgex-tsc-devops@lists.edgexfoundry.org'
     }
     stages {
