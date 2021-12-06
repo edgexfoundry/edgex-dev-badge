@@ -31,6 +31,9 @@ pipeline {
         ADMIN_RECIPIENTS = 'ernesto.ojeda@intel.com,jim@iotechsys.com'
         BUILD_FAILURE_NOTIFY_LIST = 'edgex-tsc-devops@lists.edgexfoundry.org'
     }
+    triggers {
+        cron 'H 13 * * 1' //1PM UTC == 8am EST every Monday
+    }
     stages {
         stage('EdgeX Developer Badges') {
             when {
