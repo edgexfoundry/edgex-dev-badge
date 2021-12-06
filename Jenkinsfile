@@ -233,7 +233,7 @@ def sendAdminEmail(winners, recipients) {
         }
     }
     adminEmailBody += "</ul>"
-    adminEmailBody += "<p>To download the Winner CSV <a href=\"${env.JENKINS_URL}/job/edgexfoundry/job/edgex-dev-badge/job/main/lastSuccessfulBuild/artifact/winners.csv\">Click here</a></p>"
+    adminEmailBody += "<p>To download the Winner CSV <a href=\"${env.JENKINS_URL}/job/edgexfoundry/job/edgex-dev-badge/job/main/${env.BUILD_NUMBER}/artifact/winners.csv\">Click here</a></p>"
     adminEmailBody += "<p>For further info/help please email the DevOps WG email or visit the <a href=\"https://edgexfoundry.slack.com/archives/CE46S51DX\" target=\"_blank\">#devops</a> slack channel</p>"
 
     if(env.DRY_RUN == 'false') {
