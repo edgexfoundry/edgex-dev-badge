@@ -121,26 +121,24 @@ pipeline {
                         expression { env.DRY_RUN == 'false' }
                     }
                     steps {
-                        sh '''
-                        git status
-                        if ! git diff-index --quiet HEAD --; then
-                            echo "[edgeXDeveloperBadges] We have detected there are changes to commit."
-                            git config --global user.email "jenkins@edgexfoundry.org"
-                            git config --global user.name "EdgeX Jenkins"
-                            git add badges/*
-                            git commit -s -m "chore(badge-recipients): Jenkins updated badge recipients"
-                            git branch update-chore
-                            git checkout "$GIT_BRANCH"
-                            git merge update-chore
-                            sudo chmod -R ug+w .git/*
-                        else
-                            echo "Nothing to commit"
-                        fi
-                        '''
                         sshagent(credentials: ['edgex-jenkins-ssh']) {
-                            retry(3) {
-                                sh 'git push origin "$GIT_BRANCH"'
-                            }
+                            sh '''
+                            git status
+                            if ! git diff-index --quiet HEAD --; then
+                                echo "[edgeXDeveloperBadges] We have detected there are changes to commit."
+                                git config --global user.email "jenkins@edgexfoundry.org"
+                                git config --global user.name "EdgeX Jenkins"
+                                git add badges/*
+                                git commit -s -m "chore(badge-recipients): Jenkins updated badge recipients"
+                                git branch update-chore
+                                git checkout "$GIT_BRANCH"
+                                git merge update-chore
+                                sudo chmod -R ug+w .git/*
+                                git push origin "$GIT_BRANCH"
+                            else
+                                echo '[edgeXDeveloperBadges] No changes detected to commit.'
+                            fi
+                            '''
                         }
                     }
                 }
