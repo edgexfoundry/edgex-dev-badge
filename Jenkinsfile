@@ -37,7 +37,10 @@ pipeline {
     stages {
         stage('EdgeX Developer Badges') {
             when {
-                expression { shouldBuild() }
+                anyOf {
+                    triggeredBy 'TimerTrigger'
+                    expression { shouldBuild() }
+                }
             }
             stages {
                 // disable DRY_RUN when trigger by croon
