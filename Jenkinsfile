@@ -37,9 +37,11 @@ pipeline {
     stages {
         stage('EdgeX Developer Badges') {
             when {
-                anyOf {
-                    triggeredBy 'TimerTrigger'
-                    expression { shouldBuild() }
+                not {
+                    allOf {
+                        triggeredBy 'SCMTrigger'
+                        expression { isChoreBuild() }
+                    }
                 }
             }
             stages {
@@ -246,7 +248,7 @@ def sendAdminEmail(winners, recipients) {
     }
 }
 
-def shouldBuild() {
+def isChoreBuild() {
     def commitMessage = edgex.getCommitMessage(env.GIT_COMMIT)
-    commitMessage =~ /^chore\(badge-recipients\)/ ? false : true
+    commitMessage =~ /^chore\(badge-recipients\)/ ? true : false
 }
