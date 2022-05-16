@@ -39,7 +39,7 @@ default_task = [
     'bandit',
     'anybadge',
     'package']
-
+description = summary
 
 @init
 def set_properties(project):
