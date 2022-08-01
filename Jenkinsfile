@@ -17,7 +17,7 @@
 def winners
 
 pipeline {
-    agent { label 'centos7-docker-4c-2g' }
+    agent { label 'ubuntu18.04-docker-8c-8g' }
     options {
         disableConcurrentBuilds()
         buildDiscarder(logRotator(numToKeepStr: '30'))
@@ -28,7 +28,7 @@ pipeline {
         booleanParam defaultValue: true, description: 'Should we run the job in noop mode', name: 'DRY_RUN'
     }
     environment {
-        ADMIN_RECIPIENTS = 'ernesto.ojeda@intel.com,jim@iotechsys.com'
+        ADMIN_RECIPIENTS = 'ernesto.ojeda@intel.com,james@iotechsys.com'
         BUILD_FAILURE_NOTIFY_LIST = 'edgex-tsc-devops@lists.edgexfoundry.org'
     }
     triggers {
