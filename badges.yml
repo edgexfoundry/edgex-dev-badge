@@ -23,7 +23,7 @@ badges:
     display: First Time Contributor
     image_url: https://raw.githubusercontent.com/edgexfoundry/edgex-dev-badge/main/badges/edgexfoundry/images/first_time_committer/EdgeEx_firsttimecontributor.png
     credly_id: a269a9ae-156e-4b03-bf8a-e78b30039599
-    description: You did it! You first merged PR for the EdgeX community! Now go talk to Jim!
+    description: You did it! You first merged PR for the EdgeX community! Now go talk to TSC Chairman!
     trigger:
       merged_pr: 1
       rolling: false

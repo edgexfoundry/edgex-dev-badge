@@ -27,7 +27,7 @@ badges:
     image_url: https://raw.githubusercontent.com/ernestojeda/cd-management/edgex-dev-badges/badges/edgexfoundry/images/bug_hunter/EdgeEx_BugHunter_v2-01.png
     download_url: https://raw.githubusercontent.com/ernestojeda/cd-management/edgex-dev-badges/badges/edgexfoundry/images/bug_hunter/EdgeEx_BugHunter_v2-01.png
     image: https://raw.githubusercontent.com/ernestojeda/cd-management/edgex-dev-badges/badges/edgexfoundry/...
-    description: You did it! You first merged PR for the EdgeX community! Now go talk to Jim!
+    description: You did it! You first merged PR for the EdgeX community! Now go talk to TSC Chairman!
     trigger:
       merged_pr: 1
       rolling: false
