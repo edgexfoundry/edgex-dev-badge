@@ -47,7 +47,7 @@ pipeline {
             stages {
                 // disable DRY_RUN when trigger by croon
                 stage('Prep Cron') {
-                    when { triggeredBy 'TimerTrigger' }
+                    //when { triggeredBy 'TimerTrigger' }
                     steps {
                         script {
                             env.DRY_RUN = 'false'
@@ -113,7 +113,9 @@ pipeline {
                                 buildContentGeneratorImage()
 
                                 sendWinnerEmails(winners)
+                                println("============= Debug log: Winner Email was sent =============")
                                 sendAdminEmail(winners, env.ADMIN_RECIPIENTS)
+                                println("============= Debug log: Run Send Admin Email =============")
                             } else {
                                 println("[edgeXDeveloperBadges] NO BADGES ENABLED OR NO WINNERS FOUND.")
                             }
@@ -224,6 +226,7 @@ def sendWinnerEmails(winners) {
 }
 
 def sendAdminEmail(winners, recipients) {
+    println("============= Debug log: Send Admin Email: 1 =============")
     def winnerCount = 0
     def adminEmailBody = "<h1>EdgeX Badge Winners Awarded</h1><p>The following users were awarded badges today. See more info here: <a href=\"${env.BUILD_URL}\">${env.BUILD_URL}</a></p>"
     adminEmailBody += "<ul>"
@@ -238,8 +241,9 @@ def sendAdminEmail(winners, recipients) {
     adminEmailBody += "</ul>"
     adminEmailBody += "<p>To download the Winner CSV <a href=\"${env.JENKINS_URL}/job/edgexfoundry/job/edgex-dev-badge/job/main/${env.BUILD_NUMBER}/artifact/winners.csv\">Click here</a></p>"
     adminEmailBody += "<p>For further info/help please email the DevOps WG email or visit the <a href=\"https://edgexfoundry.slack.com/archives/CE46S51DX\" target=\"_blank\">#devops</a> slack channel</p>"
-
+    println("============= Debug log: Send Admin Email: 2 =============")
     if(env.DRY_RUN == 'false') {
+        println("============= Debug log: Send Admin Email: 3 =============")
         mail body: adminEmailBody, subject: "[${winnerCount}] EdgeX Badge Winners Awarded", to: recipients, mimeType: 'text/html'
     } else {
         println('[edgeXDeveloperBadges] DRY_RUN...not admin sending email. Check artifacts.')
