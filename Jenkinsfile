@@ -28,11 +28,11 @@ pipeline {
         booleanParam defaultValue: true, description: 'Should we run the job in noop mode', name: 'DRY_RUN'
     }
     environment {
-        ADMIN_RECIPIENTS = 'cherry@iotechsys.com,james@iotechsys.com'
+        ADMIN_RECIPIENTS = 'cherry@iotechsys.com,james@iotechsys.com,wangchunli727@gmail.com'
         BUILD_FAILURE_NOTIFY_LIST = 'edgex-tsc-devops@lists.edgexfoundry.org'
     }
     triggers {
-        cron 'H 13 * * 1' //1PM UTC == 8am EST every Monday
+        cron 'H 13 * * 0' //1PM UTC == 8am EST every Monday
     }
     stages {
         stage('EdgeX Developer Badges') {
